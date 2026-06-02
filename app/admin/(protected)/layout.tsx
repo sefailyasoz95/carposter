@@ -10,20 +10,77 @@ import {
   Palette,
   Images,
   ScrollText,
+  BarChart2,
   LogOut,
   Menu,
-  X,
   Loader2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV = [
-  { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { href: "/admin/orders", label: "Orders", icon: ShoppingCart },
-  { href: "/admin/poster-styles", label: "Poster Styles", icon: Palette },
-  { href: "/admin/example-posters", label: "Example Posters", icon: Images },
-  { href: "/admin/logs",            label: "Logs",            icon: ScrollText },
+  { href: "/admin",                   label: "Dashboard",      icon: LayoutDashboard, exact: true },
+  { href: "/admin/orders",            label: "Orders",         icon: ShoppingCart },
+  { href: "/admin/poster-styles",     label: "Poster Styles",  icon: Palette },
+  { href: "/admin/example-posters",   label: "Example Posters",icon: Images },
+  { href: "/admin/analytics",         label: "Analytics",      icon: BarChart2 },
+  { href: "/admin/logs",              label: "Logs",           icon: ScrollText },
 ];
+
+interface SidebarProps {
+  pathname: string;
+  mobile?: boolean;
+  onNavigate: () => void;
+  onLogout: () => void;
+}
+
+function Sidebar({ pathname, mobile = false, onNavigate, onLogout }: SidebarProps) {
+  return (
+    <div className={cn("flex flex-col h-full", mobile ? "p-4" : "p-6")}>
+      {/* Logo */}
+      <Link href="/admin" className="flex items-center gap-2.5 mb-8" onClick={onNavigate}>
+        <Image src="/carposter_logo.png" alt="CarPoster" width={34} height={34} className="rounded-lg" />
+        <div>
+          <p className="text-sm font-black text-white leading-none">
+            Car<span className="text-red-500">Poster</span>
+          </p>
+          <p className="text-[10px] text-zinc-500 uppercase tracking-widest leading-none mt-0.5">Admin</p>
+        </div>
+      </Link>
+
+      {/* Nav */}
+      <nav className="flex-1 flex flex-col gap-1">
+        {NAV.map(({ href, label, icon: Icon, exact }) => {
+          const active = exact ? pathname === href : pathname.startsWith(href);
+          return (
+            <Link
+              key={href}
+              href={href}
+              onClick={onNavigate}
+              className={cn(
+                "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors",
+                active
+                  ? "bg-red-600/15 text-red-400 border border-red-600/20"
+                  : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800"
+              )}
+            >
+              <Icon className="h-4 w-4 shrink-0" />
+              {label}
+            </Link>
+          );
+        })}
+      </nav>
+
+      {/* Logout */}
+      <button
+        onClick={onLogout}
+        className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-500 hover:text-red-400 hover:bg-red-600/10 transition-colors mt-4"
+      >
+        <LogOut className="h-4 w-4" />
+        Sign Out
+      </button>
+    </div>
+  );
+}
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -54,58 +111,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
-  const Sidebar = ({ mobile = false }: { mobile?: boolean }) => (
-    <div className={cn("flex flex-col h-full", mobile ? "p-4" : "p-6")}>
-      {/* Logo */}
-      <Link href="/admin" className="flex items-center gap-2.5 mb-8" onClick={() => setSidebarOpen(false)}>
-        <Image src="/carposter_logo.png" alt="CarPoster" width={34} height={34} className="rounded-lg" />
-        <div>
-          <p className="text-sm font-black text-white leading-none">
-            Car<span className="text-red-500">Poster</span>
-          </p>
-          <p className="text-[10px] text-zinc-500 uppercase tracking-widest leading-none mt-0.5">Admin</p>
-        </div>
-      </Link>
-
-      {/* Nav */}
-      <nav className="flex-1 flex flex-col gap-1">
-        {NAV.map(({ href, label, icon: Icon, exact }) => {
-          const active = exact ? pathname === href : pathname.startsWith(href);
-          return (
-            <Link
-              key={href}
-              href={href}
-              onClick={() => setSidebarOpen(false)}
-              className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors",
-                active
-                  ? "bg-red-600/15 text-red-400 border border-red-600/20"
-                  : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800"
-              )}
-            >
-              <Icon className="h-4 w-4 shrink-0" />
-              {label}
-            </Link>
-          );
-        })}
-      </nav>
-
-      {/* Logout */}
-      <button
-        onClick={handleLogout}
-        className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-500 hover:text-red-400 hover:bg-red-600/10 transition-colors mt-4"
-      >
-        <LogOut className="h-4 w-4" />
-        Sign Out
-      </button>
-    </div>
-  );
-
   return (
     <div className="min-h-screen bg-zinc-950 flex">
       {/* Desktop sidebar */}
       <aside className="hidden md:flex flex-col w-56 shrink-0 bg-zinc-900 border-r border-zinc-800 fixed h-full">
-        <Sidebar />
+        <Sidebar pathname={pathname} onNavigate={() => {}} onLogout={handleLogout} />
       </aside>
 
       {/* Mobile sidebar overlay */}
@@ -113,7 +123,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="md:hidden fixed inset-0 z-50 flex">
           <div className="fixed inset-0 bg-black/60" onClick={() => setSidebarOpen(false)} />
           <aside className="relative z-10 w-64 bg-zinc-900 border-r border-zinc-800 flex flex-col">
-            <Sidebar mobile />
+            <Sidebar pathname={pathname} mobile onNavigate={() => setSidebarOpen(false)} onLogout={handleLogout} />
           </aside>
         </div>
       )}
