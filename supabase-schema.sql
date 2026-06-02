@@ -63,6 +63,24 @@ alter table orders          enable row level security;
 -- create policy "public read styles" on poster_styles for select using (is_active = true);
 -- create policy "public read examples" on example_posters for select using (true);
 
+-- ─── PAGE VIEWS ─────────────────────────────────────────────
+create table if not exists page_views (
+  id          bigint generated always as identity primary key,
+  path        text not null,
+  country     text,
+  city        text,
+  session_id  text,
+  referrer    text,
+  user_agent  text,
+  created_at  timestamptz not null default now()
+);
+
+create index if not exists page_views_path_idx       on page_views(path);
+create index if not exists page_views_country_idx    on page_views(country);
+create index if not exists page_views_created_at_idx on page_views(created_at);
+
+alter table page_views enable row level security;
+
 -- ─── STORAGE BUCKETS ────────────────────────────────────────
 -- Create in Supabase Dashboard → Storage, or via:
 insert into storage.buckets (id, name, public)
