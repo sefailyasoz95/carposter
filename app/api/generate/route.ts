@@ -94,18 +94,18 @@ export async function POST(request: Request) {
 		logger.info("generate:openai_done", { orderId });
 
 		const imgBuffer = Buffer.from(b64, "base64");
-		const posterPath = `posters/${orderId}/poster.png`;
+		const posterPath = `${orderId}/poster.png`;
 
 		logger.info("generate:uploading", { orderId, path: posterPath });
 
-		const { error: storageError } = await supabase.storage.from("car-uploads").upload(posterPath, imgBuffer, {
+		const { error: storageError } = await supabase.storage.from("generated-cars").upload(posterPath, imgBuffer, {
 			contentType: "image/png",
 			upsert: true,
 		});
 
 		if (storageError) throw new Error(storageError.message);
 
-		const { data: publicUrlData } = supabase.storage.from("car-uploads").getPublicUrl(posterPath);
+		const { data: publicUrlData } = supabase.storage.from("generated-cars").getPublicUrl(posterPath);
 
 		await supabase
 			.from("orders")

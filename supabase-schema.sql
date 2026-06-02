@@ -66,7 +66,9 @@ alter table orders          enable row level security;
 -- ─── STORAGE BUCKETS ────────────────────────────────────────
 -- Create in Supabase Dashboard → Storage, or via:
 insert into storage.buckets (id, name, public)
-values ('car-uploads', 'car-uploads', true)
+values
+  ('original-cars', 'original-cars', true),
+  ('generated-cars', 'generated-cars', true)
 on conflict (id) do nothing;
 
 -- ─── SEED EXAMPLE STYLES ────────────────────────────────────
