@@ -1,26 +1,135 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@variant dark (&:where(.dark, .dark *));
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Brand colors — red */
+  --color-brand-50: oklch(97.1% 0.013 17.38);
+  --color-brand-100: oklch(93.6% 0.032 17.576);
+  --color-brand-200: oklch(88.5% 0.061 18.585);
+  --color-brand-300: oklch(80.8% 0.114 19.571);
+  --color-brand-400: oklch(70.4% 0.191 22.216);
+  --color-brand-500: oklch(62.8% 0.258 29.234);
+  --color-brand-600: oklch(57.7% 0.245 27.325);
+  --color-brand-700: oklch(50.5% 0.213 27.518);
+  --color-brand-800: oklch(44.4% 0.177 26.899);
+  --color-brand-900: oklch(39.6% 0.141 25.723);
+
+  /* Surface tokens */
+  --color-surface-0: #ffffff;
+  --color-surface-1: #f8f8f8;
+  --color-surface-2: #f0f0f0;
+  --color-surface-dark-0: #09090b;
+  --color-surface-dark-1: #111113;
+  --color-surface-dark-2: #1a1a1f;
+  --color-surface-dark-3: #222229;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  color-scheme: light;
+  --background: #ffffff;
+  --foreground: #09090b;
+  --surface-1: #f8f8f8;
+  --surface-2: #f0f0f0;
+  --border: rgba(0, 0, 0, 0.08);
+  --muted: #71717a;
+  --card: #ffffff;
+  --card-foreground: #09090b;
+  --glow-color: rgba(220, 38, 38, 0.15);
+}
+
+.dark {
+  color-scheme: dark;
+  --background: #09090b;
+  --foreground: #fafafa;
+  --surface-1: #111113;
+  --surface-2: #1a1a1f;
+  --border: rgba(255, 255, 255, 0.06);
+  --muted: #a1a1aa;
+  --card: #111113;
+  --card-foreground: #fafafa;
+  --glow-color: rgba(220, 38, 38, 0.2);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(220, 38, 38, 0.4);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(220, 38, 38, 0.7);
+}
+
+/* Glow utility */
+.glow-brand {
+  box-shadow: 0 0 40px var(--glow-color), 0 0 80px var(--glow-color);
+}
+
+/* Glass card */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Animated gradient background */
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.gradient-animate {
+  background-size: 200% 200%;
+  animation: gradient-shift 8s ease infinite;
+}
+
+/* Shimmer loading */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.05) 50%,
+    rgba(255,255,255,0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Step line connector */
+.step-line {
+  background: linear-gradient(90deg, rgba(220,38,38,0.6), rgba(59,130,246,0.1));
+}
+
+/* Selection */
+::selection {
+  background: rgba(220, 38, 38, 0.3);
+  color: inherit;
 }
