@@ -47,8 +47,8 @@ export function middleware(request: NextRequest) {
     },
     body: JSON.stringify({
       path: pathname,
-      country: request.geo?.country ?? null,
-      city: request.geo?.city ?? null,
+      country: request.headers.get("x-vercel-ip-country") ?? null,
+      city: request.headers.get("x-vercel-ip-city") ?? null,
       session_id: sessionId,
       referrer: request.headers.get("referer") ?? null,
       user_agent: request.headers.get("user-agent") ?? null,
