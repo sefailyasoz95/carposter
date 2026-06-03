@@ -168,7 +168,9 @@ export function ResultStep({ orderId, onRestart }: ResultStepProps) {
 				</p>
 				<Progress value={displayProgress} className='h-2' />
 				<p className='text-xs text-zinc-400'>
-					{status === "pending" ? "Your order is in the queue" : "AI is working its magic — this takes ~60-100 seconds"}
+					{status === "pending"
+						? "Your order is in the queue"
+						: "AI is working its magic — this takes around 2 minutes"}
 				</p>
 			</div>
 

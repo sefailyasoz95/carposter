@@ -66,7 +66,7 @@ export function GalleryGrid({ styles }: GalleryGridProps) {
 								</div>
 							)}
 							<div className='absolute bottom-3 left-3'>
-								<Badge>{formatPrice(style.price_cents)}</Badge>
+								<Badge variant='outline'>{formatPrice(style.price_cents)}</Badge>
 							</div>
 						</div>
 

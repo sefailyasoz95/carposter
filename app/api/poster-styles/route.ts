@@ -14,5 +14,7 @@ export async function GET() {
     return Response.json({ error: error.message }, { status: 500 });
   }
 
-  return Response.json(data);
+  return Response.json(data, {
+    headers: { "Cache-Control": "public, max-age=60, stale-while-revalidate=60" },
+  });
 }
